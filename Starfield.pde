@@ -2,23 +2,12 @@
 Firework f;
 void setup(){
   size(400,400);
-  //for(int i = 0; i < 20; i++){
-  //  if(2*PI/20*i == PI/2){
-  //    firework.add(new Oddball(200,200,3,2*PI/20*i,color(255,0,0)));
-  //  } else {
-  //    firework.add(new Particle(200,200,3,2*PI/20*i,color(255,0,0)));
-  //  }
-  //}
   background(0,0,0);
   f = new Firework(20);
 }
 void draw(){
   fill(0,0,0,50);
   rect(0,0,400,400);
-  //for(Particle i : firework){
-  //  i.Move();
-  //  i.Show();
-  //}
   f.MoveAndShow();
   f.Cleanup();
 }
@@ -33,9 +22,9 @@ class Firework{
     posY = (int)(Math.random() * 300);
     for(int i = 0; i < particles; i++){
       if(i%2 == 0){
-        firework.add(new Oddball(200,200,3,2*PI/particles*i,color(255,0,0)));
+        firework.add(new Oddball(posX,posY,3,2*PI/particles*i,color(255,0,0)));
       } else {
-        firework.add(new Particle(200,200,3,2*PI/particles*i,color(255,0,0)));
+        firework.add(new Particle(posX,posY,3,2*PI/particles*i,color(255,0,0)));
       }
     } 
   }
@@ -46,30 +35,30 @@ class Firework{
     }
   }
   void Regenerate(){
-    if(firework.size() == 0){
-      for(int i = 0; i < particles; i++){
-        if(i%2 == 0){
-          firework.add(new Oddball(200,200,3,2*PI/particles*i,color(255,0,0)));
-        } else {
-          firework.add(new Particle(200,200,3,2*PI/particles*i,color(255,0,0)));
-        }
-      } 
-    }
+    firework = new ArrayList<Particle>();
+    posX = (int)(Math.random() * 300);
+    posY = (int)(Math.random() * 300);
+    for(int i = 0; i < particles; i++){
+      if(i%2 == 0){
+        firework.add(new Oddball(posX,posY,3,2*PI/particles*i,color(255,0,0)));
+      } else {
+        firework.add(new Particle(posX,posY,3,2*PI/particles*i,color(255,0,0)));
+      }
+    } 
   }
   void Cleanup(){
     int particlesOut = 0;
-    for(Particle i : firework){
-      if(i.x > displayWidth || i.x < 0){
+    for(int i = 0; i < firework.size(); i++){
+      if(firework.get(i).x > 400 || firework.get(i).x < 0){
         particlesOut += 1;
         continue;
-      }
-      if(i.y > displayHeight || i.y < 0){
+      } 
+      if(firework.get(i).y > 400 || firework.get(i).y < 0){
         particlesOut += 1;
         continue;
       }
     }
-    println(particlesOut);
-    if(particlesOut == particles){
+    if(particlesOut >= particles){
       this.Regenerate();
     }
   }
@@ -91,6 +80,7 @@ class Particle{
     y -= speed * Math.sin(angle);
   }
   void Show(){
+    colorMode(RGB, 255);
     fill(myColor);
     ellipse((float)x,(float)y,diameter, diameter);
   }
